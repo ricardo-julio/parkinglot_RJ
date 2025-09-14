@@ -39,6 +39,7 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 401
 
     token = create_access_token(identity=str(usuario.cc), expires_delta=datetime.timedelta(minutes=30)) #ojo datetime
+    
     refresh_token = create_refresh_token(identity=str(usuario.cc))
     return jsonify({'token': token, 'username': usuario.username, "refresh_token": refresh_token, "cc": usuario.cc, "message": "Login successful"}), 200
 
@@ -49,3 +50,10 @@ def refresh():
     current_user = get_jwt_identity()
     new_token = create_access_token(identity=current_user, expires_delta=datetime.timedelta(minutes=30))
     return jsonify({'token': new_token}), 200
+
+@auth_bp.route('/validate', methods=['GET'])
+@jwt_required()
+def validate():
+    current_user = get_jwt_identity()
+    usuario = user.query.filter_by(cc=current_user).first()
+    return jsonify({'username': usuario.username, "cc": usuario.cc}), 200

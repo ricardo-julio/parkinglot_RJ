@@ -1,4 +1,4 @@
-from extensiones import db
+from extensiones import db, enum
 
 class user(db.Model):
     id = db.Column(db.Integer, primary_key=True)

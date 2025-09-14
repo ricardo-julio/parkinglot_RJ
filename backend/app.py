@@ -1,6 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
 from extensiones import db, bcrypt, jwt, migrate
+from flask_cors import CORS
 import os
 
 def create_app():
@@ -16,6 +17,8 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+
+    CORS(app, origins=["http://localhost:5173"])
 
     from auth import auth_bp
     from routes_protected import protected_bp
